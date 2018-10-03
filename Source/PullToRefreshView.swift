@@ -19,7 +19,7 @@ open class PullToRefreshView: UIView {
     // MARK: Variables
     let contentOffsetKeyPath = "contentOffset"
     let contentSizeKeyPath = "contentSize"
-    var kvoContext = "PullToRefreshKVOContext"
+    private static var kvoContext = "PullToRefreshKVOContext"
     
     fileprivate var options: PullToRefreshOption
     fileprivate var backgroundView: UIView
@@ -120,17 +120,17 @@ open class PullToRefreshView: UIView {
         guard let scrollView = superView as? UIScrollView else {
             return
         }
-        scrollView.addObserver(self, forKeyPath: contentOffsetKeyPath, options: .initial, context: &kvoContext)
+        scrollView.addObserver(self, forKeyPath: contentOffsetKeyPath, options: .initial, context: &PullToRefreshView.kvoContext)
         if !pull {
-            scrollView.addObserver(self, forKeyPath: contentSizeKeyPath, options: .initial, context: &kvoContext)
+            scrollView.addObserver(self, forKeyPath: contentSizeKeyPath, options: .initial, context: &PullToRefreshView.kvoContext)
         }
     }
     
     fileprivate func removeRegister() {
         if let scrollView = superview as? UIScrollView {
-            scrollView.removeObserver(self, forKeyPath: contentOffsetKeyPath, context: &kvoContext)
+            scrollView.removeObserver(self, forKeyPath: contentOffsetKeyPath, context: &PullToRefreshView.kvoContext)
             if !pull {
-                scrollView.removeObserver(self, forKeyPath: contentSizeKeyPath, context: &kvoContext)
+                scrollView.removeObserver(self, forKeyPath: contentSizeKeyPath, context: &PullToRefreshView.kvoContext)
             }
         }
     }
@@ -150,7 +150,7 @@ open class PullToRefreshView: UIView {
             return
         }
         
-        if !(context == &kvoContext && keyPath == contentOffsetKeyPath) {
+        if !(context == &PullToRefreshView.kvoContext && keyPath == contentOffsetKeyPath) {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
             return
         }
@@ -237,7 +237,7 @@ open class PullToRefreshView: UIView {
                         self.state = .stop
                     }
                 }
-                self.refreshCompletion?()
+                self.refreshCompletion?(())
         })
     }
     
