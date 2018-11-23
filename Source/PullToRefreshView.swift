@@ -26,7 +26,7 @@ open class PullToRefreshView: UIView {
     fileprivate var arrow: UIImageView
     fileprivate var indicator: UIActivityIndicatorView
     fileprivate var scrollViewInsets: UIEdgeInsets = UIEdgeInsets.zero
-    fileprivate var refreshCompletion: ((Void) -> Void)?
+    fileprivate var refreshCompletion: (() -> ())?
     fileprivate var pull: Bool = true
     
     fileprivate var positionY:CGFloat = 0 {
@@ -78,13 +78,13 @@ open class PullToRefreshView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public init(options: PullToRefreshOption, frame: CGRect, refreshCompletion :((Void) -> Void)?, down:Bool=true) {
+    public init(options: PullToRefreshOption, frame: CGRect, refreshCompletion :(() -> ())?, down:Bool=true) {
         self.options = options
         self.refreshCompletion = refreshCompletion
 
         self.backgroundView = UIView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
         self.backgroundView.backgroundColor = self.options.backgroundColor
-        self.backgroundView.autoresizingMask = UIViewAutoresizing.flexibleWidth
+        self.backgroundView.autoresizingMask = UIView.AutoresizingMask.flexibleWidth
         
         self.arrow = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         self.arrow.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin]
@@ -92,7 +92,7 @@ open class PullToRefreshView: UIView {
         self.arrow.image = UIImage(named: PullToRefreshConst.imageName, in: Bundle(for: type(of: self)), compatibleWith: nil)
         
         
-        self.indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+        self.indicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
         self.indicator.bounds = self.arrow.bounds
         self.indicator.autoresizingMask = self.arrow.autoresizingMask
         self.indicator.hidesWhenStopped = true
@@ -237,7 +237,7 @@ open class PullToRefreshView: UIView {
                         self.state = .stop
                     }
                 }
-                self.refreshCompletion?(())
+                self.refreshCompletion?()
         })
     }
     
